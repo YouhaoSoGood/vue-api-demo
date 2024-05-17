@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkapi_demo"]=self["webpackChunkapi_demo"]||[]).push([[594],{603:function(n,u,a){a.r(u),a.d(u,{default:function(){return f}});var e=a(6768);const t={class:"about"},r=(0,e.Lk)("h1",null,"This is an about page",-1),s=[r];function c(n,u){return(0,e.uX)(),(0,e.CE)("div",t,s)}var i=a(1241);const o={},d=(0,i.A)(o,[["render",c]]);var f=d}}]);
+//# sourceMappingURL=about.193b4cdb.js.map
