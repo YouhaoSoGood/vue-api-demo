@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar w/ text</a>
+      <a class="navbar-brand" href="#">Navbar</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -25,7 +25,7 @@
             <a class="nav-link" href="#" @click.prevent="logout">登出</a>
           </li>
         </ul>
-        <span class="navbar-text"> Navbar text with an inline element </span>
+        <!-- <span class="navbar-text"> Navbar text with an inline element </span> -->
       </div>
     </div>
   </nav>

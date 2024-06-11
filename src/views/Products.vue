@@ -1,6 +1,6 @@
 <template>
   <div class="text-end">
-    <button class="btn btn-secondary" type="button" @click.prevent="openModal">增加一個產品</button>
+    <button class="btn btn-secondary" type="button" @click.prevent="openModal(true)">增加一個產品</button>
   </div>
   <table class="table mt-4">
     <thead>
@@ -25,14 +25,16 @@
         </td>
         <td>
           <div class="btn-group">
-            <button class="btn btn-outline-primary btn-sm">編輯</button>
+            <button class="btn btn-outline-primary btn-sm" @click="openModal(false, item)">編輯</button>
             <button class="btn btn-outline-danger btn-sm">刪除</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
-  <ProductModal ref="productModal" :product="tempProduct"></ProductModal>
+  <!-- tempProduct會透過props傳送進ProductModal.vue的product -->
+  <!-- 前內後外 會從ProductModal.vue中觸發emit後傳回updateProduct -->
+  <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
 </template>
 
 <script>
@@ -42,8 +44,13 @@ export default {
     return {
       products: [],
       pagination: {},
-      tempProduct: {}
+      tempProduct: {},
+      isNew: false
     };
+  },
+  // 區域註冊將ProductModal.vue加入到這個元件 並且呈現到上方template內
+  components: {
+    ProductModal
   },
   methods: {
     getProducts () {
@@ -57,15 +64,35 @@ export default {
         }
       });
     },
-    openModal () {
-      this.tempProduct = {};
+    openModal (isNew, item) {
+      if (isNew) {
+        this.tempProduct = {}
+      } else {
+        this.tempProduct = { ...item }
+      }
+      this.isNew = isNew;
       const productComponent = this.$refs.productModal;
       productComponent.showModal();
+    },
+    updateProduct (item) {
+      this.tempProduct = item;
+      // 新增
+      let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`;
+      let httpMethod = 'post';
+
+      // 編輯
+      if (!this.isNew) {
+        api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${item.id}`;
+        httpMethod = 'put';
+      }
+      const productComponent = this.$refs.productModal;
+      // 利用變數可以讓api靈活變換put或是post get等方法
+      this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
+        console.log(response.data);
+        productComponent.hideModal();
+        this.getProducts();
+      });
     }
-  },
-  // 區域註冊將ProductModal.vue加入到這個元件 並且呈現到上方template內
-  components: {
-    ProductModal
   },
   created () {
     this.getProducts()

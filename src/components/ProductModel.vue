@@ -182,6 +182,7 @@
               class="btn btn-primary"
               @click="$emit('update-product', tempProduct)"
             >
+            <!-- 利用emit來觸發外層事件 會將tempProduct的資料傳入到Products.vue的updateProduct(item)內 -->
               確認
             </button>
           </div>
@@ -201,6 +202,7 @@ export default {
       }
     }
   },
+  // 因為單向數據流 所以利用watch監聽product 當接收到資料則觸發product()將資料存在內部tempProduct
   watch: {
     product () {
       this.tempProduct = this.product
