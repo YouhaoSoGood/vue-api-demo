@@ -1,4 +1,5 @@
 <template>
+  <Loading :active="isLoading"></Loading>
   <div class="text-end">
     <button class="btn btn-secondary" type="button" @click.prevent="openModal(true)">增加一個產品</button>
   </div>
@@ -26,7 +27,8 @@
         <td>
           <div class="btn-group">
             <button class="btn btn-outline-primary btn-sm" @click="openModal(false, item)">編輯</button>
-            <button class="btn btn-outline-danger btn-sm">刪除</button>
+            <!-- <button class="btn btn-outline-danger btn-sm" @click="DelModal(item)">刪除</button> -->
+            <button class="btn btn-outline-danger btn-sm" @click="openDelModal(item)">刪除</button>
           </div>
         </td>
       </tr>
@@ -35,30 +37,37 @@
   <!-- tempProduct會透過props傳送進ProductModal.vue的product -->
   <!-- 前內後外 會從ProductModal.vue中觸發emit後傳回updateProduct -->
   <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
+  <DelModal ref="delModal" @del-product="delproduct"></DelModal>
 </template>
 
 <script>
 import ProductModal from '../components/ProductModel';
+import DelModal from '../components/DelModal';
 export default {
   data () {
     return {
       products: [],
       pagination: {},
       tempProduct: {},
-      isNew: false
+      isNew: false,
+      isLoading: false 
     };
   },
   // 區域註冊將ProductModal.vue加入到這個元件 並且呈現到上方template內
   components: {
-    ProductModal
+    ProductModal,
+    DelModal
   },
   methods: {
+    // 取得產品
     getProducts () {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products`;
-      console.log(api);
+      // console.log(api);
+      this.isLoading = true;
       this.$http.get(api).then((res) => {
+        this.isLoading = false;
         if (res.data.success) {
-          console.log(res.data);
+          // console.log(res.data);
           this.products = res.data.products;
           this.pagination = res.data.pagination;
         }
@@ -88,10 +97,25 @@ export default {
       const productComponent = this.$refs.productModal;
       // 利用變數可以讓api靈活變換put或是post get等方法
       this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
+        // console.log(this.tempProduct);
         productComponent.hideModal();
         this.getProducts();
       });
+    },
+    openDelModal (item) {
+      this.tempProduct = { ...item };
+      const delModal = this.$refs.delModal;
+      delModal.showModal();
+    },
+    delproduct () {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`
+      this.$http.delete(api).then((res) => {
+        console.log('已成功刪除資料');
+        const delModal = this.$refs.delModal;
+        delModal.hideModal();
+        this.getProducts();
+      })
     }
   },
   created () {

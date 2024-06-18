@@ -192,7 +192,7 @@
   </template>
 
 <script>
-import Modal from 'bootstrap/js/dist/modal';
+import modalMixin from '../mixins/modalMixin.js';
 export default {
   props: {
     product: {
@@ -215,17 +215,23 @@ export default {
     }
   },
   methods: {
-    showModal () {
-      this.modal.show()
-    },
-    hideModal () {
-      this.modal.hide()
+    //上傳圖片
+    uploadFile () {
+      const uploadedFile = this.$refs.fileInput.files[0];
+      const formData = new FormData();
+      // append是增加一個欄位 名稱為api中name屬性為file-to-upload
+      formData.append('file-to-upload', uploadedFile);
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`;
+      // 會利用formData的表單來發送這個答案
+      this.$http.post(url, formData).then((res) => {
+        // console.log(res.data); //確定是否有抓到imgUrl
+        if (res.data.success) {
+          this.tempProduct.imageUrl = res.data.imageUrl;
+        }
+      })
     }
   },
   // 生命週期
-  mounted () {
-    // 將modal實體化 this.modal會指向外層ref="modal"
-    this.modal = new Modal(this.$refs.modal)
-  }
+  mixins: [modalMixin]
 };
 </script>
