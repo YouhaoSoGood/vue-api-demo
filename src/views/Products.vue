@@ -97,12 +97,24 @@ export default {
       const productComponent = this.$refs.productModal;
       // 利用變數可以讓api靈活變換put或是post get等方法
       this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
-        // console.log(response.data);
-        // console.log(this.tempProduct);
+        // console.log(response);
         productComponent.hideModal();
-        this.getProducts();
+        if (response.data.success) {
+          this.getProducts();
+          this.emitter.emit('push-message', {
+            style: 'success',
+            title: '更新成功'
+          })
+        } else {
+          this.emitter.emit('push-message', {
+            style: 'danger',
+            title: '更新失敗',
+            content: response.data.message.join('、')
+          })
+        }
       });
     },
+    // 開啟刪除視窗
     openDelModal (item) {
       this.tempProduct = { ...item };
       const delModal = this.$refs.delModal;
@@ -120,6 +132,7 @@ export default {
   },
   created () {
     this.getProducts()
-  }
+  },
+  inject: ['emitter']
 };
 </script>
