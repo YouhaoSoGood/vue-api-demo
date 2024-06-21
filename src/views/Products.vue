@@ -111,6 +111,7 @@ export default {
             title: '更新失敗',
             content: response.data.message.join('、')
           })
+          console.log(response.data);
         }
       });
     },
@@ -124,6 +125,12 @@ export default {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`
       this.$http.delete(api).then((res) => {
         console.log('已成功刪除資料');
+        if (res.data.success) {
+          this.emitter.emit('push-message', {
+            style: 'success',
+            title: '成功刪除'
+          })
+        }
         const delModal = this.$refs.delModal;
         delModal.hideModal();
         this.getProducts();

@@ -9,13 +9,12 @@
       {{ msg1.content }}
     </div>
   </div>
-</template>
+</template> 
 
 <script>
 import Toast from 'bootstrap/js/dist/toast';
 
 export default {
-  name: 'Toast',
   props: [
     'msg1'
   ],
