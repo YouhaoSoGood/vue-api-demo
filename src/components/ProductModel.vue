@@ -81,7 +81,7 @@
               </div>
               <div class="col-sm-8">
                 <div class="mb-3">
-                  <label for="title" class="form-label">標題</label>
+                  <label for="title" class="form-label">產品名稱</label>
                   <input
                     type="text"
                     class="form-control"
@@ -192,6 +192,7 @@
   </template>
 
 <script>
+// ProductModal.vue為產品新增的畫面
 import modalMixin from '../mixins/modalMixin.js';
 export default {
   props: {

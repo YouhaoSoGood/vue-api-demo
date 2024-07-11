@@ -19,6 +19,7 @@ export default {
     this.emitter.on('push-message', (message) => {
       const { style = 'success', title, content } = message;
       this.messages.push({ style, title, content });
+      // this.messages.push(message) //也可以這樣寫
     });
   }
 };

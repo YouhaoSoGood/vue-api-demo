@@ -30,6 +30,7 @@
 </template>
 
 <script>
+// DelModal.vue是用來刪除的方法頁面
 import modalMixin from '../mixins/modalMixin.js'
 export default {
   porps: {
