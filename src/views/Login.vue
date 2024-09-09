@@ -50,15 +50,14 @@ export default {
   methods: {
     signIn () {
       const api = `${process.env.VUE_APP_API}admin/signin`;
-      // console.log(api);
       this.$http.post(api, this.user).then((res) => {
         if (res.data.success) {
           const { token, expired } = res.data;
           // console.log(token, expired);
           document.cookie = `hexToken=${token}; expires=${new Date(expired)}`
-          // console.log(res);
+          console.log(res);
           this.$router.push('/dashboard/products');
-        }
+        } 
       })
     }
   }

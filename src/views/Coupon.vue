@@ -9,6 +9,7 @@
     <thead>
       <tr>
         <th width="120">名稱</th>
+        <th width="120">優惠碼</th>
         <th width="120">折扣百分比</th>
         <th width="120">到期日</th>
         <th width="100">是否啟用</th>
@@ -18,6 +19,7 @@
     <tbody>
       <tr v-for="item in coupons" :key="item.id">
         <td>{{ item.title }}</td>
+        <td>{{ item.code }}</td>
         <td>{{ item.percent + '%'}}</td>
         <td class="text-right">{{ $filters.filterdate(item.due_date) }}</td>
         <!-- <td class="text-right">{{ item.price }}</td> -->
@@ -93,6 +95,7 @@ export default {
     updateCoupons (item) {
       if (this.isNew) {
         const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon`;
+        // 因在api回傳參數有要求要data 所以將data:item補上
         this.$http.post(url, { data: item }).then((response) => {
           // console.log(response, item);
           this.$refs.CouponModal.hideModal();

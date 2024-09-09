@@ -1,10 +1,5 @@
 <template>
 <Navbar></Navbar>
-
-<!-- <div class="container-fluid"> //此為bootstrap的一個class 可以距離邊邊有一小段距離
-    <router-view/>
-    <ToastMessages></ToastMessages>
-</div> -->
 <div class="container-fluid mt-3 position-relative">
     <ToastMessages></ToastMessages>
     <router-view/>

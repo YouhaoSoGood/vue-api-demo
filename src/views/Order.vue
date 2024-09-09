@@ -1,5 +1,5 @@
 <template>
-    <!-- <Loading :active="isLoading"></Loading> -->
+    <Loading :active="isLoading"></Loading>
     <table class="table mt-4">
       <thead>
         <tr>
@@ -30,39 +30,75 @@
         </tr>
       </tbody>
     </table>
-    <!-- <OrderModal></OrderModal>
-    <DelModal></DelModal>
-    <Paginations></Paginations> -->
+    <OrderModal ref="OrderModal" :order="tempOrder" @update-order="updateOrders"></OrderModal>
+    <DelModal :item="tempOrder" ref="delModal" @del-product="DelOrders"></DelModal>
+    <Paginations :pages="pagination" @emit-pages="getOrders"></Paginations>
 </template>
 
 <script>
-// import OrderModal from '../components/OrderModal.vue'
-// import DelModal from '../components/DelModal';
-// import Paginations from '../components/Paginations'
+import OrderModal from '../components/OrderModal'
+import DelModal from '../components/DelModal';
+import Paginations from '../components/Paginations'
 
 export default {
   data () {
     return {
-      orders: {}
+      orders: {},
+      tempOrders: {},
+      isNew: false,
+      isLoading: false,
+      pagination: {}
     }
   },
   components: {
-    // OrderModal,
-    // DelModal,
-    // Paginations
+    OrderModal,
+    DelModal,
+    Paginations
   },  
   methods: {
-    getOrder (page = 1) {
+    getOrders (page = 1) {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/orders/?page=${page}`;
-      // this.isLoading = true;
+      this.isLoading = true;
       this.$http.get(api).then((res) => {
-        console.log(res.data.orders);
-        this.order = res.data.orders;
+        this.isLoading = false;
+        this.orders = res.data.orders;
       });
+    },
+    updateOrders (item) {
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/order/${this.tempOrders.id}`;
+      this.$http.put(url, { data: this.tempOrders }).then((response) => {
+        this.$refs.OrderModal.hideModal();
+      });
+    },
+    openOrders (isNew, item) {
+      this.isNew = isNew;
+      if (this.isNew) {
+        this.tempOrders = {}
+      } else {
+        this.tempOrders = { ...item }
+      }
+      this.$refs.OrderModal.showModal();
+    },
+    openDelOrders (item) {
+      this.orders = { ...item };
+      const delModal = this.$refs.delModal;
+      delModal.showModal();
+    },
+    DelOrders () {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/order/${this.tempOrders.id}`;
+      this.$http.delete(api).then((response) => {
+        if (response.data.success) {
+          this.$httpMessageState(response, '刪除訂單')
+        }
+        const delModal = this.$refs.delModal;
+        delModal.hideModal();
+        this.getOrders();
+      })
     }
   },
   created () {
-    this.getOrder();
-  }
+    this.getOrders();
+  },
+  inject: ['emitter']
 }
 </script>

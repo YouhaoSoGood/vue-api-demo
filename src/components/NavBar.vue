@@ -29,7 +29,6 @@
             <a class="nav-link" href="#" @click.prevent="logout">登出</a>
           </li>
         </ul>
-        <!-- <span class="navbar-text"> Navbar text with an inline element </span> -->
       </div>
     </div>
   </nav>
